@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+      * {
+        font-family:  'Ubuntu', sans-serif;
+      }
+      .sidebar-bg {
+        background-color: #141B2A;
+      }
+      .main-bg {
+        background-color: #111827;
+      }
+
+      input[type="text"], .input-group-text{
+        background-color: #374151 !important;
+        border: none !important;
+        box-shadow: none !important;
+        
+      }
+
+      input[type="text"] {
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+        font-family: 600 !important;
+      }
+
+      .input-group-text {
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
+
+      .input-group {
+        border: 1px solid  #9ca3af !important;
+        border-radius: 15px;
+      }
+
+      input::placeholder {
+        color: #9ca3af !important;
+        opacity: 1; 
+        font-family: 600 !important;
+      }
+
+
+      .fa-solid {
+        color: #606977;
+      }
+
+      #main-bg {
+        height: 750px;
+        padding-top: 20%;
+      }
+
+      #chat-response-box {
+          height: 750px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-right: 20px;
+      }
+
+      .cursor-pointer {
+          cursor: pointer;
+      }
+
+      .avatar {
+          height: 40px;
+      }
+
+      .bg-bot {
+          background-color: #141b2a ;
+          border: 1px solid #9ca3af;
+      }
+
+      .bg-human {
+          background-color: #374151 ;
+          border: 1px solid #9ca3af;
+      }
+
+      .text-grey {
+        color: #9ca3af;
+      }
+
+      .snippet {
+          position: relative;
+          background: #111827;
+          padding: 32px 5%;
+          margin: 24px 0;
+      }
+
+      .stage {
+          position: relative;
+      }
+      
+      .dot-flashing {
+          position: relative;
+          width: 10px;
+          height: 10px;
+          border-radius: 5px;
+          background-color: #9ca3af;
+          color: #9ca3af;
+          animation: dot-flashing 1s infinite linear alternate;
+          animation-delay: 0.5s;
+      }
+      .dot-flashing::before, .dot-flashing::after {
+          content: "";
+          display: inline-block;
+          position: absolute;
+          top: 0;
+      }
+      .dot-flashing::before {
+          left: -15px;
+          width: 10px;
+          height: 10px;
+          border-radius: 5px;
+          background-color: #9ca3af;
+          color: #9ca3af;
+          animation: dot-flashing 1s infinite alternate;
+          animation-delay: 0s;
+      }
+      .dot-flashing::after {
+          left: 15px;
+          width: 10px;
+          height: 10px;
+          border-radius: 5px;
+          background-color: #9ca3af;
+          color: #9ca3af;
+          animation: dot-flashing 1s infinite alternate;
+          animation-delay: 1s;
+      }
+
+      @keyframes dot-flashing {
+          0% {
+              background-color: #9ca3af;
+          }
+          50%, 100% {
+              background-color: rgba(156, 163, 175, 0.2);
+          }
+      }
+
+      .logout-button {
+        text-decoration: none !important;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-2 sidebar-bg vh-100 text-white">
+            <div class="sidebar p-3">
+              <p class="h2">🐶 Petcare AI</p>
+              <a class="fixed-bottom h5 text-white logout-button p-5" href="/logout">Logout<i class="fa-solid fa-right-from-bracket ms-3 text-white"></i></a>
+            </div>
+
+          </div>
+          <div class="col-sm-10 main-bg vh-100 text-white">
+            <div class="main-content">
+              <div class="container pt-5">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <div class="card border-0 p-5 bg-transparent">
+                            <div id="main-bg">
+                                <div class="text-center">
+                                    <p class="display-2">🐶</p>
+                                    <p class="text-white display-5">Petcare AI</p>
+                                    <h5 class="text-grey">Your One-stop Solution for your Little Fur Baby</h5>
+                                </div>
+                            </div>
+                            <div id="chat-response-box" class="d-none">
+                              
+                            </div>
+                        </div>                    
+                        <div id="chat-input-box" class="pt-5">
+                            <div class="input-group mb-3 shadow">
+                                <input type="text" class="form-control text-white p-3" name="user-input" id="user-input" aria-describedby="send-btn" placeholder="Ask Anything">
+                                <span class="input-group-text cursor-pointer" id="send-btn"><i class="fa-solid fa-paper-plane"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/1da99de032.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script>
+      var chatResponseBox = document.getElementById('chat-response-box');
+      var mainBg = document.getElementById('main-bg');
+      var userInput = document.getElementById('user-input');
+      
+
+      $(document).ready(function () {
+          $("#send-btn").click(async function (event) {
+              event.preventDefault();
+              const formData = new FormData();
+              const userInput = document.getElementById('user-input').value;
+              if (userInput == null || userInput == "") {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops!!!',
+                      text: "Please enter some text!",
+                      allowOutsideClick: false,
+                      allowEscapeKey: false,
+                      confirmButtonColor: "#000"
+                  });
+              }else{                  
+                  chatResponseBox.classList.remove('d-none');
+                  mainBg.style.display = "none";
+                  formData.append('prompt', userInput);   
+                  var html = `
+                              <div class="row mb-5">
+                                  <div class="col-sm-3"></div>
+                                  <div class="col-sm-9 text-end">
+                                      <div class="row">
+                                          
+                                          <div class="col-sm-11 bg-human shadow rounded-3">
+                                              <h6 class="p-3 text-white mb-0">`+userInput+`</h6>
+                                          </div>
+                                          <div class="col-sm-1">
+                                              <img src="../static/assets/images/me-avatar.png" alt="Avatar" class="avatar">
+                                          </div>
+                                      </div>
+                                  </div>
+                                  
+                              </div>
+
+                              <div id="loader">
+                                  <div class="row">
+                                      <div class="col-sm-9">
+                                          <div class="snippet" data-title="dot-flashing">
+                                          <div class="stage">
+                                              <div class="dot-flashing"></div>
+                                          </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                  `;
+
+                  chatResponseBox.innerHTML += html;
+                  document.getElementById('user-input').value = '';
+                  let response = await fetch('/chat_response', {
+                      method: "POST",
+                      body: formData                
+                  });                
+                  processChatResponse(response);   
+              }
+                           
+          });
+      });
+      
+      async function processChatResponse(response){
+          switch (response.status) {
+              case 400:  
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops!!!',
+                      text: "Sorry, Couldn't be able to generate your response now. Please try after some time.",
+                      confirmButtonColor: "#040b14"
+                  })
+              break;
+              case 200:                      
+                  var json = await response.json(); 
+                  var chatResult = json.answer.replace("\n", "<br>");
+                  var sourceDocumentList = json.source_documents_list
+                  var html = `
+                          <div class="row mb-5">
+                              <div class="col-sm-9 text-start">
+                                  <div class="row">           
+                                      <div class="col-sm-1">
+                                          <img src="../static/assets/images/bot-avatar.png" alt="Avatar" class="avatar">
+                                      </div>                             
+                                      <div class="col-sm-11 bg-maroon shadow rounded-3">
+                                          <h6 class="p-3 text-white mb-4">`+chatResult+`</h6>`
+                  if (sourceDocumentList.length > 0) {
+                      html += `                        
+                                              <div class="row p-3">
+                      
+                          
+                                                  <div class="col-sm-9">
+                                                      <a class="p-2 btn bg-white text-dark w-100" href="../static/`+sourceDocumentList[0]+`" target="_blank">`+extractFilename(sourceDocumentList[0])+`</a>.
+                                                  </div>
+                                                  <div class="col-sm-3">
+                                                      <span class="p-2 btn bg-white text-dark w-100">Page Number: `+json.page_number_list[0]+`</span>.
+                                                  </div>
+                          
+                                              </div>`
+                  }
+                  html += `                        
+                                      </div>
+                                      
+                                  </div>
+                              </div>                                
+                              <div class=" col-sm-3"></div>
+                          </div>
+                  `;
+                  var loader = document.getElementById('loader');
+                  loader.remove();
+                  chatResponseBox.innerHTML += html;
+                  break;
+              default:
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops!!!',
+                      text: "There is a "+response.status+" error. Please contact admin for support.",
+                      confirmButtonColor: "#040b14"
+                  })
+          }
+      }
+
+      userInput.addEventListener("keypress", function(event) {
+          // If the user presses the "Enter" key on the keyboard
+          if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Trigger the button element with a click
+              document.getElementById("send-btn").click();
+          }
+      });
+
+      var extractFilename = (path) => {
+          const pathArray = path.split("/");
+          const lastIndex = pathArray.length - 1;
+          return pathArray[lastIndex];
+      };
+  </script>
+
+  </body>
+</html>

@@ -1,0 +1,5 @@
+fastapi
+starlette
+passlib
+uvicorn
+jinja2
