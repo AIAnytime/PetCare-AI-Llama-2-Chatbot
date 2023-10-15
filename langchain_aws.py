@@ -9,7 +9,7 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 
 region = "us-east-1"
-endpoint_name = "huggingface-pytorch-tgi-inference-2023-08-20-10-04-46-379"
+endpoint_name = "*******************************************************"
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 
 def build_chain():
