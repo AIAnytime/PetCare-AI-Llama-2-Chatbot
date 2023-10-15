@@ -1,7 +1,7 @@
 import boto3
 import json 
 
-ENDPOINT_NAME = "huggingface-pytorch-tgi-inference-2023-08-20-10-04-46-379"
+ENDPOINT_NAME = "***************************************************"
 
 def load_llm(payload):
 
